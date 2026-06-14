@@ -1,4 +1,4 @@
-# Job Board API
+# Job Board API (CURRENTLY BUILDING)
 
 Django + DRF backend for a job board platform with multi-role system (employers/candidates), JWT auth, job listings, applications with PDF uploads, async email notifications, and Docker Compose.
 
