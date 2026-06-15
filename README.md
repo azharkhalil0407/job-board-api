@@ -1,4 +1,4 @@
-# Job Board API (CURRENTLY BUILDING)
+# Job Board API
 
 Django + DRF backend for a job board platform with multi-role system (employers/candidates), JWT auth, job listings, applications with PDF uploads, async email notifications, and Docker Compose.
 
@@ -32,4 +32,5 @@ Django + DRF backend for a job board platform with multi-role system (employers/
 ## Progress
 
 - [x] Day 1: Django project setup, DRF, PostgreSQL, JWT config
-- [ ] Day 2-14: Models, serializers, views, permissions, Celery, Docker
+- [x] Day 2: Custom User model (role), Job and Application models with unique constraint and admin
+- [ ] Day 3-14: Migrations deep dive, serializers, views, permissions, Celery, Docker
