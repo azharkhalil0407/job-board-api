@@ -33,4 +33,6 @@ Django + DRF backend for a job board platform with multi-role system (employers/
 
 - [x] Day 1: Django project setup, DRF, PostgreSQL, JWT config
 - [x] Day 2: Custom User model (role), Job and Application models with unique constraint and admin
-- [ ] Day 3-14: Migrations deep dive, serializers, views, permissions, Celery, Docker
+- [x] Day 3: Admin customization (inline applications, list_select_related N+1 fix, Debug Toolbar, migration internals)
+- [x] Day 4: DRF serializers (RegisterSerializer, UserSerializer, JobSerializer, ApplicationSerializer, ApplicationStatusUpdateSerializer with status transitions)
+- [ ] Day 5-14: JWT auth endpoints, views, permissions, Celery, Docker, testing
