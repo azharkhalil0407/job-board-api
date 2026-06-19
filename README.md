@@ -81,7 +81,7 @@ Role-based permissions are enforced at the view layer using custom DRF permissio
 - [x] Day 3: Admin customization, N+1 query optimization, migration internals
 - [x] Day 4: Serializers with validation and state machine enforcement
 - [x] Day 5: JWT auth endpoints (register, login, refresh) with custom claims (role, username)
-- [ ] Day 6: Views, viewsets, URL routing
+- [x] Day 6: Job CRUD views with method-level permissions, ownership checks, N+1 prevention (select_related), and PATCH support
 - [ ] Day 7: Custom role-based permissions
 - [ ] Day 8: Application lifecycle endpoints
 - [ ] Day 9: Resume PDF upload
