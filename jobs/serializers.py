@@ -39,7 +39,7 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'id', 'job', 'job_title', 'candidate', 'status',
             'cover_letter', 'resume', 'applied_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'status', 'applied_at', 'updated_at']
+        read_only_fields = ['id', 'job','applied_at', 'updated_at']
 
 
 class ApplicationStatusUpdateSerializer(serializers.ModelSerializer):
