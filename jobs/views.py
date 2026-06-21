@@ -8,6 +8,7 @@ from .serializers import JobSerializer, ApplicationSerializer, ApplicationStatus
 from .filters import JobFilter
 from accounts.permissions import IsEmployer, IsCandidate
 from .permissions import IsJobOwner, IsApplicationJobOwner, IsApplicationOwner
+from .tasks import send_status_update_email   # <-- added
 
 
 #job views
@@ -113,6 +114,17 @@ class ApplicationStatusUpdateView(generics.UpdateAPIView):
     def get_queryset(self):
         return Application.objects.select_related(
             'candidate', 'job', 'job__employer'
+        )
+
+    def perform_update(self, serializer):
+        application = serializer.save()
+
+        # Fire and forget: queue the email task asynchronously
+        send_status_update_email.delay(
+            candidate_email=application.candidate.email,
+            candidate_username=application.candidate.username,
+            job_title=application.job.title,
+            new_status=application.status,
         )
 
 
