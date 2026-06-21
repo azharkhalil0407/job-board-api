@@ -6,6 +6,7 @@ from .views import (
     ApplicationListView,
     ApplicationRetrieveView,
     ApplicationStatusUpdateView,
+    ResumeUploadView,
 )
 
 urlpatterns = [
@@ -18,4 +19,5 @@ urlpatterns = [
     path('applications/', ApplicationListView.as_view(), name='application-list'),
     path('applications/<int:pk>/', ApplicationRetrieveView.as_view(), name='application-detail'),
     path('applications/<int:pk>/status/', ApplicationStatusUpdateView.as_view(), name='application-status'),
+    path('applications/<int:pk>/resume/', ResumeUploadView.as_view(), name='application-resume'),
 ]

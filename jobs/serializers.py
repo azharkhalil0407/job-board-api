@@ -32,6 +32,7 @@ class JobSerializer(serializers.ModelSerializer):
 class ApplicationSerializer(serializers.ModelSerializer):
     candidate = UserSerializer(read_only=True)
     job_title = serializers.CharField(source='job.title', read_only=True)
+    resume = serializers.FileField(required=False, allow_null=True)
 
     class Meta:
         model = Application
@@ -39,7 +40,27 @@ class ApplicationSerializer(serializers.ModelSerializer):
             'id', 'job', 'job_title', 'candidate', 'status',
             'cover_letter', 'resume', 'applied_at', 'updated_at',
         ]
-        read_only_fields = ['id', 'job','applied_at', 'updated_at']
+        read_only_fields = ['id', 'job', 'status', 'applied_at', 'updated_at']
+
+    def validate_resume(self, value):
+        if value is None:
+            return value
+
+        # Enforce PDF only
+        allowed_types = ['application/pdf']
+        if hasattr(value, 'content_type') and value.content_type not in allowed_types:
+            raise serializers.ValidationError(
+                "Only PDF files are accepted."
+            )
+
+        # Enforce 5MB size limit
+        max_size_mb = 5
+        if value.size > max_size_mb * 1024 * 1024:
+            raise serializers.ValidationError(
+                f"File size must not exceed {max_size_mb}MB."
+            )
+
+        return value
 
 
 class ApplicationStatusUpdateSerializer(serializers.ModelSerializer):
