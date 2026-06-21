@@ -1,14 +1,22 @@
-from rest_framework import generics, permissions
-from rest_framework.exceptions import PermissionDenied, ValidationError
+from rest_framework import generics, permissions, status
+from rest_framework.exceptions import ValidationError
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 from .models import Job, Application
 from .serializers import JobSerializer, ApplicationSerializer, ApplicationStatusUpdateSerializer
+from .filters import JobFilter
 from accounts.permissions import IsEmployer, IsCandidate
-from .permissions import IsJobOwner, IsApplicationOwner, IsApplicationJobOwner
+from .permissions import IsJobOwner, IsApplicationJobOwner, IsApplicationOwner
 
 
-#JOB VIEWS
+#job views
 class JobListCreateView(generics.ListCreateAPIView):
     serializer_class = JobSerializer
+    filterset_class = JobFilter
+    search_fields = ['title', 'description']
+    ordering_fields = ['created_at', 'salary_min', 'salary_max']
+    ordering = ['-created_at']
 
     def get_permissions(self):
         if self.request.method == 'POST':
@@ -38,10 +46,11 @@ class JobRetrieveUpdateDestroyView(generics.RetrieveUpdateDestroyAPIView):
         return self.update(request, *args, **kwargs)
 
 
-#APPLICATION VIEWS
+#application views
 class JobApplyView(generics.CreateAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [permissions.IsAuthenticated, IsCandidate]
+    parser_classes = [MultiPartParser, FormParser, JSONParser]
 
     def get_queryset(self):
         return Application.objects.select_related('candidate', 'job')
@@ -59,9 +68,16 @@ class JobApplyView(generics.CreateAPIView):
         serializer.save(candidate=self.request.user, job=job)
 
 
+class ApplicationPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
 class ApplicationListView(generics.ListAPIView):
     serializer_class = ApplicationSerializer
     permission_classes = [permissions.IsAuthenticated]
+    pagination_class = ApplicationPagination
 
     def get_queryset(self):
         user = self.request.user
@@ -98,3 +114,35 @@ class ApplicationStatusUpdateView(generics.UpdateAPIView):
         return Application.objects.select_related(
             'candidate', 'job', 'job__employer'
         )
+
+
+class ResumeUploadView(generics.UpdateAPIView):
+    serializer_class = ApplicationSerializer
+    permission_classes = [permissions.IsAuthenticated, IsCandidate, IsApplicationOwner]
+    parser_classes = [MultiPartParser, FormParser]
+    http_method_names = ['patch']
+
+    def get_queryset(self):
+        return Application.objects.filter(
+            candidate=self.request.user
+        ).select_related('candidate', 'job')
+
+    def patch(self, request, *args, **kwargs):
+        application = self.get_object()
+        file = request.FILES.get('resume')
+
+        if not file:
+            return Response(
+                {"resume": "No file was submitted."},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+
+        serializer = self.get_serializer(
+            application,
+            data={'resume': file},
+            partial=True,
+        )
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(serializer.data, status=status.HTTP_200_OK)

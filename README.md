@@ -84,7 +84,7 @@ Role-based permissions are enforced at the view layer using custom DRF permissio
 - [x] Day 6: Job CRUD views with method-level permissions, ownership checks, N+1 prevention (select_related), and PATCH support
 - [x] Day 7: Custom permissions (IsEmployer, IsCandidate, IsJobOwner), profile endpoint, declarative views
 - [x] Day 8: Application lifecycle (apply, list scoped by role, retrieve, status update with state machine)
-- [ ] Day 9: Resume PDF upload
+- [x] Day 9: Resume PDF upload (validation, dedicated upload endpoint, multipart handling)
 - [ ] Day 10: Filtering, search, pagination
 - [ ] Day 11: Celery + Redis async email
 - [ ] Day 12: Docker Compose (4 services)
