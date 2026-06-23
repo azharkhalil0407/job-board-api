@@ -87,6 +87,5 @@ Role-based permissions are enforced at the view layer using custom DRF permissio
 - [x] Day 9: Resume PDF upload (validation, dedicated upload endpoint, multipart handling)
 - [x] Day 10: Filtering, search, and pagination on job listings and applications
 - [x] Day 11: Celery and Redis setup, async email notifications with retries
-- [ ] Day 12: Docker Compose (4 services)
+- [ ] Day 12: Day 12: Docker Compose with 4 services (web, db, redis, celery)
 - [ ] Day 13: Test suite
-- [ ] Day 14: Polish, final docs
