@@ -4,7 +4,7 @@ from decouple import config
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = config('SECRET_KEY')
-DEBUG = config('DEBUG', cast=bool)
+DEBUG = config('DEBUG', cast=bool, default=True)
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -20,7 +20,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'django_filters',
     'debug_toolbar',
-    'django_celery_results',  # <-- added
+    'django_celery_results',
 
     # Your apps
     'accounts',
@@ -107,8 +107,9 @@ AUTH_USER_MODEL = 'accounts.User'
 
 INTERNAL_IPS = ['127.0.0.1']
 
+
 # Celery configuration
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = config('CELERY_BROKER_URL', default='redis://localhost:6379/0')
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
@@ -117,4 +118,4 @@ CELERY_TIMEZONE = 'UTC'
 
 # Email configuration (console backend for development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-DEFAULT_FROM_EMAIL = 'noreply@jobboard.com'
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL', default='noreply@jobboard.com')
